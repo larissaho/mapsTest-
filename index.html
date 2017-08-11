@@ -1,31 +1,86 @@
 <!DOCTYPE html>
+<style>
+    html, body, #map {
+    height: 100%;
+    width: 100%;
+    margin: 0px;
+    padding: 0px
+    }
+</style> 
 <html>
-  <head>
-    <style>
-       #map {
-        height: 400px;
-        width: 100%;
-       }
-    </style>
-  </head>
-  <body>
-    <h3>My Google Maps Demo</h3>
-    <div id="map"></div>
-    <script>
-      function initMap() {
-        var uluru = {lat: -25.363, lng: 131.044};
-        var map = new google.maps.Map(document.getElementById('map'), {
-          zoom: 4,
-          center: uluru
-        });
-        var marker = new google.maps.Marker({
-          position: uluru,
-          map: map
-        });
-      }
-    </script>
-    <script async defer
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAF1SjsmJMJ0MBmlj6ZDoDnEuBVuadwsvA&callback=initMap">
-    </script>
-  </body>
+    <<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAF1SjsmJMJ0MBmlj6ZDoDnEuBVuadwsvA&callback=initMap">
+    </script> 
+
+    <div id="map" style="border: 2px solid #3872ac;"></div>
 </html>
+
+<script> 
+var map;
+var infowindow = new google.maps.InfoWindow();
+function initialize() {
+
+    var mapProp = {
+        center: new google.maps.LatLng(40.567166, -105.086933), //LLANDRINDOD WELLS
+        zoom: 5,
+        mapTypeId: google.maps.MapTypeId.ROADMAP
+    };
+
+    map = new google.maps.Map(document.getElementById("map"), mapProp);
+
+    var json1 = {
+            "individuals": [
+              {
+                "name": "Jeremy Holmes",
+                "lat": 40.567166,
+                "lng": -105.086933
+              },
+              {
+                "name": "Giovonn Joseph-McDade",
+                "lat": 47.383419,
+                "lng": -122.208871
+              },
+              {
+                "name": "Armando Garcia-Muro",
+                "lat": 34.581576,
+                "lng": -118.111881
+              },
+              {
+                "name": "Santino Trevino",
+                "lat": 34.10497,
+                "lng": -118.347604
+              },
+              {
+                "name": "Matthew Colton Stover",
+                "lat": 64.829939,
+                "lng": -147.746202
+              }
+        ]
+    };
+    $.each(json1.individuals, function (key, data) {
+
+        var latLng = new google.maps.LatLng(data.lat, data.lng);
+
+        var marker = new google.maps.Marker({
+            position: latLng,
+            map: map,
+            name: data.name
+        });
+
+        var details = data.name 
+
+        bindInfoWindow(marker, map, infowindow, details);
+    });
+
+}
+
+function bindInfoWindow(marker, map, infowindow, strDescription) {
+    google.maps.event.addListener(marker, 'click', function () {
+        infowindow.setContent(strDescription);
+        infowindow.open(map, marker);
+    });
+}
+
+google.maps.event.addDomListener(window, 'load', initialize);
+
+</script> 
